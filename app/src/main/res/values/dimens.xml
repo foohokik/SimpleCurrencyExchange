@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="corner_radius_viewholder_item">10dp</dimen>
+    <dimen name="big_text_size_item_viewholder">50sp</dimen>
+    <dimen name="item_viewholder_text_size">14sp</dimen>
+    <dimen name="title_toolbar_text_size">16sp</dimen>
+</resources>

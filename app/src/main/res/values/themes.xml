@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.SimpleCurrencyExchange" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/activityBackground</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+    </style>
+
+    <style name="Theme.SimpleCurrencyExchange" parent="Base.Theme.SimpleCurrencyExchange" />
+</resources>

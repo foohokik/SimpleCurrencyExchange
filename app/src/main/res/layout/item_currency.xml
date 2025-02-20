@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_currency_item"
+    android:elevation="5dp"
+    android:layout_margin="10dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_char_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="45dp"
+            android:text="@string/char_code"
+            android:textSize="@dimen/big_text_size_item_viewholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/balance"
+            android:textSize="@dimen/item_viewholder_text_size"
+            android:textColor="@color/textColorHint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_char_code" />
+
+        <EditText
+            android:id="@+id/inputValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/white"
+            android:hint="@string/edit_amount"
+            android:inputType="numberDecimal"
+            android:textColorHint="@color/textColorHint"
+            android:textSize="@dimen/big_text_size_item_viewholder"
+            android:focusable="auto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/converter_main_text"
+            android:textSize="@dimen/item_viewholder_text_size"
+            android:textColor="@color/textColorHint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inputValue" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

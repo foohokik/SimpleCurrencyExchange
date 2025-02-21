@@ -1,9 +1,8 @@
 package com.example.simplecurrencyexchange.di
 
-import com.example.appnews.core.network.NetworkResultCallAdapterFactory
+import com.example.simplecurrencyexchange.core.network.NetworkResultCallAdapterFactory
 import com.example.simplecurrencyexchange.data.api.CurrencyApi
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

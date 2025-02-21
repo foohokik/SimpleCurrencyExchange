@@ -1,40 +1,9 @@
 package com.example.simplecurrencyexchange.presentation.adapter_bottom
 
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import com.example.simplecurrencyexchange.presentation.model.ValuteUI
 
 class ValuteDiffUtil_ : DiffUtil.ItemCallback<ValuteUI>() {
-
-
-    //    (
-//    private val oldList: List<ValuteUI>,
-//    private val newList: List<ValuteUI>
-//) : DiffUtil.Callback() {
-//
-//    override fun getOldListSize(): Int = oldList.size
-//
-//    override fun getNewListSize(): Int = newList.size
-//
-//    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//        val oldItem = oldList[oldItemPosition]
-//        val newItem = newList[newItemPosition]
-//        return oldItem.convertationTopResult == newItem.convertationTopResult
-//    }
-//
-//    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//        Log.d("MyTag", "areContentsTheSame  =  "
-//                + (oldList[oldItemPosition] == newList[newItemPosition]).toString())
-//        return oldList[oldItemPosition] == newList[newItemPosition]
-//    }
-//
-//    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-//        return if (oldItemPosition != newItemPosition) {
-//            true
-//        } else {
-//            null
-//        }
-//    }
 
     override fun getChangePayload(oldItem: ValuteUI, newItem: ValuteUI): Any? {
         return if (oldItem != newItem) {

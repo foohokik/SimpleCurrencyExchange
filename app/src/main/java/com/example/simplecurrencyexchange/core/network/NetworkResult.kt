@@ -1,4 +1,4 @@
-package com.example.appnews.core.network
+package com.example.simplecurrencyexchange.core.network
 
 sealed class NetworkResult<T : Any> {
     class Success<T: Any>(val data: T) : NetworkResult<T>()

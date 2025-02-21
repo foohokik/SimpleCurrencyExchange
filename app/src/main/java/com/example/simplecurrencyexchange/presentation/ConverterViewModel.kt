@@ -1,10 +1,8 @@
 package com.example.simplecurrencyexchange.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.appnews.core.network.onSuccess
-import com.example.simplecurrencyexchange.core.extension.safeDiv
+import com.example.simplecurrencyexchange.core.network.onSuccess
 import com.example.simplecurrencyexchange.di.IoDispatcher
 import com.example.simplecurrencyexchange.domain.ConverterInteractor
 import com.example.simplecurrencyexchange.presentation.adapter_top.AdapterListener
@@ -24,7 +22,6 @@ class ConverterViewModel @Inject constructor(
 
     private val _stateFlow = MutableStateFlow(ConverterState())
     val stateFlow = _stateFlow.asStateFlow()
-
 
     init {
         getCurrencies()
@@ -98,16 +95,20 @@ class ConverterViewModel @Inject constructor(
         }
     }
 
-    override fun onEditTextChange(text: String) {
-        _stateFlow.update { it.copy(inputAmountTop = text.toDouble()) }
+    override fun onEditTextChangeTop(text: String) {
+        _stateFlow.update { it.copy(inputAmountTopEditFlow = text.toDouble()) }
         countAmountBottom()
     }
 
+    override fun onEditTextChangeBottom(text: String) {
+        _stateFlow.update { it.copy(inputAmountBottomEditFlow = text.toDouble()) }
+        countAmountTop()
+    }
+
     private fun countAmountBottom() {
-        val topValuteAmount = _stateFlow.value.inputAmountTop
-        val exchangeForOneCurrency = _stateFlow.value.resultBottom
+        val topValuteAmount = _stateFlow.value.inputAmountTopEditFlow
+        val exchangeForOneCurrency = _stateFlow.value.resultTop
         val exchangeAmount = topValuteAmount * exchangeForOneCurrency
-        Log.d("MyTag", "exchangeAmount  =  " + exchangeAmount)
         val mutableListBottom = _stateFlow.value.itemsBottomValute.toMutableList()
         val index = _stateFlow.value.valuteBottom
         val bottomValute = mutableListBottom[index]
@@ -122,18 +123,27 @@ class ConverterViewModel @Inject constructor(
                 itemsBottomValute = mutableListBottom
             )
         }
-        Log.d("MyTag", "itemsBottomValute  =  " + _stateFlow.value.itemsBottomValute)
     }
 
-//    private fun convertCurrencyBottom() {
-//        val mutableList = _stateFlow.value.value.toMutableList()
-//        val topValute = mutableList[_stateFlow.value.valuteTop]
-//        val bottomValute = mutableList[_stateFlow.value.valuteBottom]
-//        val resultBottom = bottomValute.value.safeDiv(topValute.value)
-//        mutableList.set(
-//            _stateFlow.value.valuteTop,
-//            topValute.copy(convertationTopResult = resultBottom)
-//        )
-//        _stateFlow.update { it.copy(value = mutableList) }
-//    }
+
+    private fun countAmountTop() {
+        val bottomValuteAmount = _stateFlow.value.inputAmountBottomEditFlow
+        val exchangeForOneCurrency = _stateFlow.value.resultBottom
+        val exchangeAmount = bottomValuteAmount * exchangeForOneCurrency
+        val mutableListTop = _stateFlow.value.itemsTopValute.toMutableList()
+        val index = _stateFlow.value.valuteTop
+        val topValute = mutableListTop[index]
+        mutableListTop.set(
+            index, topValute.copy(
+                convertationInputResult = exchangeAmount
+            )
+        )
+        _stateFlow.update {
+            it.copy(
+                inputAmountTop = exchangeAmount,
+                itemsTopValute = mutableListTop
+            )
+        }
+    }
+
 }

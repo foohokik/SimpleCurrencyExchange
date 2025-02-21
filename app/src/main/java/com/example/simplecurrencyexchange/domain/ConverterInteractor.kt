@@ -1,11 +1,7 @@
 package com.example.simplecurrencyexchange.domain
 
-import com.example.appnews.core.network.NetworkResult
-import com.example.simplecurrencyexchange.data.model.BalanceData
-import com.example.simplecurrencyexchange.di.IoDispatcher
+import com.example.simplecurrencyexchange.core.network.NetworkResult
 import com.example.simplecurrencyexchange.domain.model.Currency
-import com.example.simplecurrencyexchange.domain.model.Valute
-import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 const val KEY_IS_FIRST_ENTER = "KEY_IS_FIRST_ENTER"

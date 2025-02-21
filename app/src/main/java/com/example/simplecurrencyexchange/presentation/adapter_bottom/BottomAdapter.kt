@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.simplecurrencyexchange.databinding.ItemCurrencyBinding
+import com.example.simplecurrencyexchange.presentation.adapter_top.AdapterListener
 import com.example.simplecurrencyexchange.presentation.adapter_top.TopCurrencyViewHolder
 import com.example.simplecurrencyexchange.presentation.adapter_top.ValuteDiffUtil
 import com.example.simplecurrencyexchange.presentation.model.ValuteUI
 
-class BottomAdapter: ListAdapter<ValuteUI, BottomCurrencyViewHolder>(ValuteDiffUtil_()){
+class BottomAdapter(private val listener: AdapterListener): ListAdapter<ValuteUI, BottomCurrencyViewHolder>(ValuteDiffUtil_()){
 
 
     //    RecyclerView.Adapter<BottomCurrencyViewHolder>() {
@@ -41,7 +42,7 @@ class BottomAdapter: ListAdapter<ValuteUI, BottomCurrencyViewHolder>(ValuteDiffU
 
     override fun onBindViewHolder(holder: BottomCurrencyViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, listener)
     }
 
     override fun onBindViewHolder(holder: BottomCurrencyViewHolder, position: Int, payloads: List<Any>) {

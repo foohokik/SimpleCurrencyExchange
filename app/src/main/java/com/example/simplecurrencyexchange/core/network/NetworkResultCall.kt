@@ -1,4 +1,4 @@
-package com.example.appnews.core.network
+package com.example.simplecurrencyexchange.core.network
 
 import okhttp3.Request
 import okio.Timeout

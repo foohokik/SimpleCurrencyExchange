@@ -1,4 +1,4 @@
-package com.example.appnews.core.network
+package com.example.simplecurrencyexchange.core.network
 
 import retrofit2.Call
 import retrofit2.CallAdapter

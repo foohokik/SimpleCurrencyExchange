@@ -1,6 +1,6 @@
 package com.example.simplecurrencyexchange.data.model
 
-import com.example.appnews.core.network.NetworkResult
+import com.example.simplecurrencyexchange.core.network.NetworkResult
 import com.example.simplecurrencyexchange.domain.model.Currency
 import com.example.simplecurrencyexchange.domain.model.Valute
 

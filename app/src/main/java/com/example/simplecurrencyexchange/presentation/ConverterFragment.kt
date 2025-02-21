@@ -2,11 +2,10 @@ package com.example.simplecurrencyexchange.presentation
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -93,7 +92,7 @@ class ConverterFragment : Fragment() {
     private fun initBottomRecycleView() {
         val snapHelper = PagerSnapHelper()
         with(binding.rvBottom) {
-            bottomAdapter = BottomAdapter()
+            bottomAdapter = BottomAdapter(viewModel)
             val manager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             layoutManager = manager

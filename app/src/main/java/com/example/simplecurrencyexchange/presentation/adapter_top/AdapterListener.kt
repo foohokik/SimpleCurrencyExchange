@@ -1,5 +1,6 @@
 package com.example.simplecurrencyexchange.presentation.adapter_top
 
 interface AdapterListener {
-    fun onEditTextChange(text:String)
+    fun onEditTextChangeTop(text:String)
+    fun onEditTextChangeBottom(text:String)
 }

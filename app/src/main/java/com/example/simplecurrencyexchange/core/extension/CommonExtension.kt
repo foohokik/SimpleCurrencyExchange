@@ -2,8 +2,6 @@ package com.example.simplecurrencyexchange.core.extension
 
 import android.app.Activity
 import android.content.Context
-import android.os.Build
-import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
@@ -14,8 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import java.io.Serializable
-
 
 
 fun Context.hideKeyboard(view: View) {
@@ -57,10 +53,3 @@ fun Activity.hideKeyboard() {
     = factory() as T
 }
 
-fun Double?.safeDiv(other: Double?): Double? {
-    return if (this != null && other != null && other != 0.0) {
-        this / other
-    } else {
-        null
-    }
-}

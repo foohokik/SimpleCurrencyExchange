@@ -11,10 +11,7 @@ fun ValuteResponse.toValute(): Valute =
 val listValute = listOf("USD", "EUR", "GBP")
 
 fun CurrencyResponse.toCurrency(): Currency {
-    return Currency(
-//        valute = valute.map { it.value.toValute() }
-        valute = valute.filterKeys { it in listValute }.map { it.value.toValute() }
-    )
+    return Currency(valute = valute.filterKeys { it in listValute }.map { it.value.toValute() })
 }
 
 fun NetworkResult<CurrencyResponse>.toNetworkResultCurrency(): NetworkResult<Currency> {

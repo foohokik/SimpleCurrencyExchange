@@ -23,7 +23,7 @@ class ConverterInteractor @Inject constructor(
         }
     }
 
-    suspend fun getBalance(key:String): String? {
+     fun getBalance(key:String): String? {
         return preferencesManager.getBalance(key)
     }
 
@@ -38,7 +38,7 @@ class ConverterInteractor @Inject constructor(
         }
     }
 
-    suspend fun saveBalance (key: String, balance: String) {
+     fun saveBalance (key: String, balance: String) {
         preferencesManager.saveBalance(key,balance)
     }
 

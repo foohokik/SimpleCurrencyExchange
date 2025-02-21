@@ -15,7 +15,8 @@ class ValuteDiffUtilBottom : DiffUtil.ItemCallback<ValuteUI>() {
 
     override fun areItemsTheSame(oldItem: ValuteUI, newItem: ValuteUI): Boolean {
         return ((oldItem.convertationResult == newItem.convertationResult)
-                || (oldItem.convertationInputResult == newItem.convertationInputResult))
+                || (oldItem.convertationInputResult == newItem.convertationInputResult)
+                || (oldItem.balance == newItem.balance))
     }
 
     override fun areContentsTheSame(oldItem: ValuteUI, newItem: ValuteUI): Boolean {

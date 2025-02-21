@@ -12,8 +12,9 @@ class TopCurrencyViewHolder(val binding: ItemCurrencyBinding) :
     fun bind(valute: ValuteUI, listener: AdapterListener) =
         with(binding) {
             tvCharCode.text = valute.charCode
+            val roundedbalance = "%.2f".format(valute.balance)
             tvBalance.text =
-                root.context.getString(R.string.balance, valute.balance.toString(), valute.symbol)
+                root.context.getString(R.string.balance, roundedbalance, valute.symbol)
             val roundedRes = "%.2f".format(valute.convertationResult)
             tvResult.text = root.context.getString(
                 R.string.converter_main_text,
@@ -24,7 +25,12 @@ class TopCurrencyViewHolder(val binding: ItemCurrencyBinding) :
             inputValue.doOnTextChanged { text, _, _, _ ->
                 text?.let {
                     if (text.toString().isNotEmpty()) {
-                        listener.onEditTextChangeTop(text.toString())
+                        val newText = if (text.toString().contains(",")) {
+                            text.toString().replace(',', '.')
+                        } else {
+                            text.toString()
+                        }
+                        listener.onEditTextChangeTop(newText)
                     }
                 }
             }
@@ -43,6 +49,9 @@ class TopCurrencyViewHolder(val binding: ItemCurrencyBinding) :
             )
             val roundedResInput = "%.2f".format(valute.convertationInputResult)
             inputValue.setText(roundedResInput)
+            val roundedbalance = "%.2f".format(valute.balance)
+            tvBalance.text =
+                root.context.getString(R.string.balance, roundedbalance, valute.symbol)
         }
 
 }

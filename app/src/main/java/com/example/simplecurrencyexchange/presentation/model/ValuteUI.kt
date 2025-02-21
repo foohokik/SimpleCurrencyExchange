@@ -10,9 +10,9 @@ data class ValuteUI(
     val previous: Double,
     val value: Double,
     val symbol: String,
-    val balance: Double? = null,
-    val convertationResult:Double = 0.0,
-    val symbolAnotherCurrency: String? = null,
+    val balance: Double = 0.0,
+    val convertationResult: Double = 0.0,
+    val symbolAnotherCurrency: String ="",
     val convertationInputResult: Double = 0.0
 )
 

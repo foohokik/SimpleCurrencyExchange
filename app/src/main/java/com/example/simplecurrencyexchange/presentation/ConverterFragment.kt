@@ -1,10 +1,12 @@
 package com.example.simplecurrencyexchange.presentation
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -71,12 +73,12 @@ class ConverterFragment : Fragment() {
                     }
                 }
                 launch { viewModel.stateFlow.collect { onToolBarTextChange(it) } }
+                launch { viewModel.sideEffects.collect(::handleSideEffects) }
             }
         }
     }
 
     private fun initTopRecycleView() {
-
         val snapHelper = PagerSnapHelper()
         with(binding.rvTop) {
             topAdapter = TopAdapter(viewModel)
@@ -137,10 +139,21 @@ class ConverterFragment : Fragment() {
         )
     }
 
-    private fun onExchangeClick () {
+    private fun onExchangeClick() {
         binding.exchange.setOnClickListener {
             viewModel.doExchange()
         }
+    }
+
+    private fun getBalances(): String {
+        val listValute = viewModel.stateFlow.value.itemsTopValute
+        val stringBuilder = StringBuilder()
+
+        for (valute in listValute) {
+            val balance = "%.2f".format(valute.balance)
+            stringBuilder.append("${valute.charCode} : ${balance} ${valute.symbol}\n")
+        }
+        return stringBuilder.toString()
     }
 
     override fun onDestroyView() {
@@ -148,6 +161,40 @@ class ConverterFragment : Fragment() {
         binding.rvTop.removeOnScrollListener(scrollListenerTop)
         binding.rvBottom.removeOnScrollListener(scrollListenerBottom)
         _binding = null
+    }
+
+    private fun showExchangeTransactionDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.approve)
+            .setMessage(getBalances())
+            .setPositiveButton("Ok") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun handleSideEffects(sideEffects: SideEffects) {
+        when (sideEffects) {
+            is SideEffects.CautionEffect -> Toast.makeText(
+                requireContext(),
+                getString(R.string.caution),
+                Toast.LENGTH_LONG
+            ).show()
+
+            is SideEffects.ErrorEffect -> Toast.makeText(
+                requireContext(),
+                getString(R.string.error, sideEffects.err),
+                Toast.LENGTH_LONG
+            ).show()
+
+            is SideEffects.ExceptionEffect -> Toast.makeText(
+                requireContext(),
+                getString(R.string.error, sideEffects.throwable),
+                Toast.LENGTH_LONG
+            ).show()
+
+            is SideEffects.onClickExchange -> showExchangeTransactionDialog()
+        }
     }
 
 }

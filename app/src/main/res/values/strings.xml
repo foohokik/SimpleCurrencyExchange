@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">SimpleCurrencyExchange</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="char_code">USD</string>
     <string name="balance">You have: %1$s %2$s</string>
     <string name="converter_main_text">%1$s 1 = %2$s %3$s</string>
     <string name="edit_amount"> 0.00 </string>
     <string name="exchange_btn"> Exchange </string>
+    <string name="caution"> You don\'t have enough funds \nin your account for transaction </string>
+    <string name="approve"> Transaction approved </string>
+    <string name="error"> Error: %1$s</string>
+    <string name="accounts"> Available accounts\n\n %1$s </string>
 </resources>

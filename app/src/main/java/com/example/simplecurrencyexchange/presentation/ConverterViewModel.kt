@@ -1,14 +1,16 @@
 package com.example.simplecurrencyexchange.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.simplecurrencyexchange.core.network.onError
+import com.example.simplecurrencyexchange.core.network.onException
 import com.example.simplecurrencyexchange.core.network.onSuccess
 import com.example.simplecurrencyexchange.di.IoDispatcher
 import com.example.simplecurrencyexchange.domain.ConverterInteractor
 import com.example.simplecurrencyexchange.presentation.adapter_top.AdapterListener
 import com.example.simplecurrencyexchange.presentation.model.toListValuteUI
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ConverterViewModel @Inject constructor(
@@ -29,16 +32,23 @@ class ConverterViewModel @Inject constructor(
     private val _sideEffects = Channel<SideEffects>()
     val sideEffects = _sideEffects.receiveAsFlow()
 
-    init {
-        getCurrencies()
-
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        viewModelScope.launch { _sideEffects.send(SideEffects.ExceptionEffect(throwable)) }
     }
 
+    init {
+        getCurrencies()
+    }
+
+
+
     private fun getCurrencies() {
-        viewModelScope.launch(ioDispatcher) {
-            while (true) {
-                getAndMergeCurrenciesData()
-                delay(300000)
+        viewModelScope.launch(exceptionHandler) {
+            withContext(ioDispatcher) {
+                while (true) {
+                    getAndMergeCurrenciesData()
+                    delay(30000)
+                }
             }
         }
     }
@@ -56,6 +66,8 @@ class ConverterViewModel @Inject constructor(
                 it.copy(itemsTopValute = mergedResult, itemsBottomValute = mergedResult)
             }
         }
+            .onError { _, message -> _sideEffects.send(SideEffects.ErrorEffect(message.orEmpty())) }
+            .onException { throwable -> _sideEffects.send(SideEffects.ExceptionEffect(throwable)) }
     }
 
     fun topUpdateFlow(index: Int) {
@@ -70,19 +82,22 @@ class ConverterViewModel @Inject constructor(
 
 
     private fun convertCurrency() {
-        val mutableListTop = _stateFlow.value.itemsTopValute.toMutableList()
-        val mutableListBottom = _stateFlow.value.itemsBottomValute.toMutableList()
-        val topValute = mutableListTop[_stateFlow.value.valuteTop]
-        val bottomValute = mutableListBottom[_stateFlow.value.valuteBottom]
+        val state = _stateFlow.value
+        val mutableListTop = state.itemsTopValute.toMutableList()
+        val mutableListBottom = state.itemsBottomValute.toMutableList()
+        val indexTop = state.valuteTop
+        val indexBottom = state.valuteBottom
+        val topValute = mutableListTop[indexTop]
+        val bottomValute = mutableListBottom[indexBottom]
         val resultTop = topValute.value / bottomValute.value
         val resultBottom = bottomValute.value / topValute.value
         mutableListTop.set(
-            _stateFlow.value.valuteTop, topValute.copy(
+            indexTop, topValute.copy(
                 convertationResult = resultTop, symbolAnotherCurrency = bottomValute.symbol
             )
         )
         mutableListBottom.set(
-            _stateFlow.value.valuteBottom, bottomValute.copy(
+            indexBottom, bottomValute.copy(
                 convertationResult = resultBottom, symbolAnotherCurrency = topValute.symbol
             )
         )
@@ -109,11 +124,12 @@ class ConverterViewModel @Inject constructor(
     }
 
     private fun countAmountBottom() {
-        val topValuteAmount = _stateFlow.value.inputAmountTopEditFlow
-        val exchangeForOneCurrency = _stateFlow.value.resultTop
+        val state = _stateFlow.value
+        val topValuteAmount = state.inputAmountTopEditFlow
+        val exchangeForOneCurrency = state.resultTop
         val exchangeAmount = topValuteAmount * exchangeForOneCurrency
-        val mutableListBottom = _stateFlow.value.itemsBottomValute.toMutableList()
-        val index = _stateFlow.value.valuteBottom
+        val mutableListBottom = state.itemsBottomValute.toMutableList()
+        val index = state.valuteBottom
         val bottomValute = mutableListBottom[index]
         mutableListBottom.set(
             index, bottomValute.copy(
@@ -129,11 +145,12 @@ class ConverterViewModel @Inject constructor(
 
 
     private fun countAmountTop() {
-        val bottomValuteAmount = _stateFlow.value.inputAmountBottomEditFlow
-        val exchangeForOneCurrency = _stateFlow.value.resultBottom
+        val state = _stateFlow.value
+        val bottomValuteAmount = state.inputAmountBottomEditFlow
+        val exchangeForOneCurrency = state.resultBottom
         val exchangeAmount = bottomValuteAmount * exchangeForOneCurrency
-        val mutableListTop = _stateFlow.value.itemsTopValute.toMutableList()
-        val index = _stateFlow.value.valuteTop
+        val mutableListTop = state.itemsTopValute.toMutableList()
+        val index = state.valuteTop
         val topValute = mutableListTop[index]
         mutableListTop.set(
             index, topValute.copy(
@@ -148,54 +165,54 @@ class ConverterViewModel @Inject constructor(
     }
 
     fun doExchange() {
-        val mutableListTop = _stateFlow.value.itemsTopValute.toMutableList()
-        val mutableListBottom = _stateFlow.value.itemsBottomValute.toMutableList()
-        val topValute = mutableListTop[_stateFlow.value.valuteTop]
-        val bottomValute = mutableListBottom[_stateFlow.value.valuteBottom]
+        val state = _stateFlow.value
+        val mutableListTop = state.itemsTopValute.toMutableList()
+        val mutableListBottom = state.itemsBottomValute.toMutableList()
+
+        val topValute = mutableListTop[state.valuteTop]
+        val bottomValute = mutableListBottom[state.valuteBottom]
+
         val transferAmountCurrency = topValute.convertationInputResult
         val getAmountCurrency = bottomValute.convertationInputResult
+
         val keyTopValute = topValute.charCode
         val keyBottomValute = bottomValute.charCode
-        viewModelScope.launch() {
-            var getTopValuteBalance = interactor.getBalance(keyTopValute)?.toDouble()
-            var getBottomValuteBalance = interactor.getBalance(keyBottomValute)?.toDouble()
-            val refactorResultBalanceTopValute = getTopValuteBalance?.minus(transferAmountCurrency)
-            val refactorResultBalanceBottomValute = getBottomValuteBalance?.plus(getAmountCurrency)
-            if (getTopValuteBalance != null) {
-                if (transferAmountCurrency > getTopValuteBalance) {
-                    _sideEffects.send(SideEffects.CautionEffect(""))
-                } else {
-                    interactor.saveBalance(keyTopValute, refactorResultBalanceTopValute.toString())
-                    interactor.saveBalance(
-                        keyBottomValute,
-                        refactorResultBalanceBottomValute.toString()
-                    )
-                    _sideEffects.send(SideEffects.onClickExchange(_stateFlow.value))
-                    getBottomValuteBalance = interactor.getBalance(keyBottomValute)?.toDouble()
-                    getTopValuteBalance = interactor.getBalance(keyTopValute)?.toDouble()
-                    getBottomValuteBalance?.let { bottomValute.copy(balance = it) }?.let {
-                        mutableListBottom.set(
-                            _stateFlow.value.valuteBottom,
-                            it
-                        )
-                    }
-                    getTopValuteBalance?.let { topValute.copy(balance = it) }?.let {
-                        mutableListTop.set(
-                            _stateFlow.value.valuteTop,
-                            it
-                        )
-                    }
-                    _stateFlow.update {
-                        it.copy(
-                            itemsBottomValute = mutableListBottom,
-                            itemsTopValute = mutableListTop
-                        )
-                    }
-                }
 
+        viewModelScope.launch {
+            val getTopValuteBalance = interactor.getBalance(keyTopValute)?.toDouble()
+            val getBottomValuteBalance = interactor.getBalance(keyBottomValute)?.toDouble()
+
+            if (getTopValuteBalance == null || getBottomValuteBalance == null) {
+                _sideEffects.send(SideEffects.CautionEffect(""))
+                return@launch
             }
+
+            if (transferAmountCurrency > getTopValuteBalance) {
+                _sideEffects.send(SideEffects.CautionEffect(""))
+                return@launch
+            }
+
+            val refactorResultBalanceTopValute = getTopValuteBalance - transferAmountCurrency
+            val refactorResultBalanceBottomValute = getBottomValuteBalance + getAmountCurrency
+
+            interactor.saveBalance(keyTopValute, refactorResultBalanceTopValute.toString())
+            interactor.saveBalance(keyBottomValute, refactorResultBalanceBottomValute.toString())
+
+            val updatedTopValute = topValute.copy(balance = refactorResultBalanceTopValute)
+            val updatedBottomValute = bottomValute.copy(balance = refactorResultBalanceBottomValute)
+
+            mutableListTop[state.valuteTop] = updatedTopValute
+            mutableListBottom[state.valuteBottom] = updatedBottomValute
+
+            _stateFlow.update {
+                it.copy(
+                    itemsTopValute = mutableListTop,
+                    itemsBottomValute = mutableListBottom
+                )
+            }
+
+            _sideEffects.send(SideEffects.onClickExchange(_stateFlow.value))
         }
     }
-
 
 }

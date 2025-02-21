@@ -56,6 +56,7 @@ class ConverterFragment : Fragment() {
         initTopRecycleView()
         initBottomRecycleView()
         observe()
+        onExchangeClick()
     }
 
     private fun observe() {
@@ -134,6 +135,12 @@ class ConverterFragment : Fragment() {
             roundedRes,
             state.symbolAnotherCurrency
         )
+    }
+
+    private fun onExchangeClick () {
+        binding.exchange.setOnClickListener {
+            viewModel.doExchange()
+        }
     }
 
     override fun onDestroyView() {

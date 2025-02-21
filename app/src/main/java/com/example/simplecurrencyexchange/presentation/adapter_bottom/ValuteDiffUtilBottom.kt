@@ -3,7 +3,7 @@ package com.example.simplecurrencyexchange.presentation.adapter_bottom
 import androidx.recyclerview.widget.DiffUtil
 import com.example.simplecurrencyexchange.presentation.model.ValuteUI
 
-class ValuteDiffUtil_ : DiffUtil.ItemCallback<ValuteUI>() {
+class ValuteDiffUtilBottom : DiffUtil.ItemCallback<ValuteUI>() {
 
     override fun getChangePayload(oldItem: ValuteUI, newItem: ValuteUI): Any? {
         return if (oldItem != newItem) {

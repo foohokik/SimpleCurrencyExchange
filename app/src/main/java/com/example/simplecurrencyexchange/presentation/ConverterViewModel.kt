@@ -31,22 +31,26 @@ class ConverterViewModel @Inject constructor(
     private fun getCurrencies() {
         viewModelScope.launch(ioDispatcher) {
             while (true) {
-                val resultValute = interactor.getCurrencies()
-                resultValute.onSuccess { currency ->
-                    val listValute = currency.valute.toListValuteUI()
-                    val mergedResult = listValute.map { valuteUI ->
-                        valuteUI.copy(
-                            balance = interactor.getBalance(valuteUI.charCode)?.toDouble()
-                        )
-                    }
-                    _stateFlow.update {
-                        ConverterState(
-                            itemsTopValute = mergedResult,
-                            itemsBottomValute = mergedResult
-                        )
-                    }
-                }
+               getAndMergeCurrenciesData()
                 delay(300000)
+            }
+        }
+    }
+
+    private suspend fun getAndMergeCurrenciesData () {
+        val resultValute = interactor.getCurrencies()
+        resultValute.onSuccess { currency ->
+            val listValute = currency.valute.toListValuteUI()
+            val mergedResult = listValute.map { valuteUI ->
+                valuteUI.copy(
+                    balance = interactor.getBalance(valuteUI.charCode)?.toDouble()
+                )
+            }
+            _stateFlow.update {
+                ConverterState(
+                    itemsTopValute = mergedResult,
+                    itemsBottomValute = mergedResult
+                )
             }
         }
     }
@@ -145,5 +149,28 @@ class ConverterViewModel @Inject constructor(
             )
         }
     }
+
+    fun doExchange () {
+        val mutableListTop = _stateFlow.value.itemsTopValute.toMutableList()
+        val mutableListBottom = _stateFlow.value.itemsBottomValute.toMutableList()
+        val topValute = mutableListTop[_stateFlow.value.valuteTop]
+        val bottomValute = mutableListBottom[_stateFlow.value.valuteBottom]
+        val transferAmountCurrency = topValute.convertationInputResult
+        val getAmountCurrency = bottomValute.convertationInputResult
+        val keyTopValute = topValute.charCode
+        val keyBottomValute = bottomValute.charCode
+        viewModelScope.launch(ioDispatcher) {
+            val getTopValuteBalance = interactor.getBalance(keyTopValute)
+            val getBottomValuteBalance = interactor.getBalance(keyBottomValute)
+            val refactorResultBalanceTopValute = getTopValuteBalance?.toDouble()
+                ?.minus(transferAmountCurrency)
+            val refactorResultBalanceBottomValute = getBottomValuteBalance?.toDouble()?.plus(getAmountCurrency)
+            interactor.saveBalance(keyTopValute, refactorResultBalanceTopValute.toString())
+            interactor.saveBalance(keyBottomValute, refactorResultBalanceBottomValute.toString())
+            getAndMergeCurrenciesData()
+        }
+
+    }
+
 
 }

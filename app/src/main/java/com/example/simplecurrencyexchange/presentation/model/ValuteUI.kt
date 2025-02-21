@@ -14,6 +14,5 @@ data class ValuteUI(
     val convertationResult:Double = 0.0,
     val symbolAnotherCurrency: String? = null,
     val convertationInputResult: Double = 0.0
-   // val convertationBottomResult:Double? = null
 )
 

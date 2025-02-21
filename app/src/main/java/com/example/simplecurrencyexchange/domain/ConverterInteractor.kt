@@ -38,4 +38,8 @@ class ConverterInteractor @Inject constructor(
         }
     }
 
+    suspend fun saveBalance (key: String, balance: String) {
+        preferencesManager.saveBalance(key,balance)
+    }
+
 }

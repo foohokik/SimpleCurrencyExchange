@@ -7,7 +7,7 @@ import com.example.simplecurrencyexchange.databinding.ItemCurrencyBinding
 import com.example.simplecurrencyexchange.presentation.adapter_top.AdapterListener
 import com.example.simplecurrencyexchange.presentation.model.ValuteUI
 
-class BottomAdapter(private val listener: AdapterListener): ListAdapter<ValuteUI, BottomCurrencyViewHolder>(ValuteDiffUtil_()){
+class BottomAdapter(private val listener: AdapterListener): ListAdapter<ValuteUI, BottomCurrencyViewHolder>(ValuteDiffUtilBottom()){
 
 
     //    RecyclerView.Adapter<BottomCurrencyViewHolder>() {

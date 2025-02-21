@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.simplecurrencyexchange.databinding.ItemCurrencyBinding
 import com.example.simplecurrencyexchange.presentation.model.ValuteUI
 
-class TopAdapter (private val listener: AdapterListener): ListAdapter<ValuteUI, TopCurrencyViewHolder>(ValuteDiffUtil()) {
+class TopAdapter (private val listener: AdapterListener): ListAdapter<ValuteUI, TopCurrencyViewHolder>(ValuteDiffUtilTop()) {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopCurrencyViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

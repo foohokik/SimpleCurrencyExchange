@@ -2,13 +2,9 @@ package com.example.simplecurrencyexchange.presentation.adapter_bottom
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.example.simplecurrencyexchange.databinding.ItemCurrencyBinding
 import com.example.simplecurrencyexchange.presentation.adapter_top.AdapterListener
-import com.example.simplecurrencyexchange.presentation.adapter_top.TopCurrencyViewHolder
-import com.example.simplecurrencyexchange.presentation.adapter_top.ValuteDiffUtil
 import com.example.simplecurrencyexchange.presentation.model.ValuteUI
 
 class BottomAdapter(private val listener: AdapterListener): ListAdapter<ValuteUI, BottomCurrencyViewHolder>(ValuteDiffUtil_()){
@@ -30,7 +26,7 @@ class BottomAdapter(private val listener: AdapterListener): ListAdapter<ValuteUI
 //    }
 //
 //    fun setItems(newItems: List<ValuteUI>) {
-//        val diffResult = DiffUtil.calculateDiff(ValuteDiffUtil(items, newItems))
+//        val diffResult = DiffUtil.calculateDiff(ValuteDiffUtilTop(items, newItems))
 //        items.clear()
 //        items.addAll(newItems)
 //        diffResult.dispatchUpdatesTo(this)

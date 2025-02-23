@@ -52,6 +52,7 @@
             android:textColorHint="@color/textColorHint"
             android:textSize="@dimen/big_text_size_item_viewholder"
             android:focusable="auto"
+            android:maxLength = "6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

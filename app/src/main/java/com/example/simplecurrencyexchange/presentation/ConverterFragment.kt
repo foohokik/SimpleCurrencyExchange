@@ -20,6 +20,7 @@ import com.example.simplecurrencyexchange.core.extension.viewModelFactory
 import com.example.simplecurrencyexchange.databinding.FragmentConverterBinding
 import com.example.simplecurrencyexchange.presentation.adapter_bottom.BottomAdapter
 import com.example.simplecurrencyexchange.presentation.adapter_top.TopAdapter
+import com.example.simplecurrencyexchange.presentation.model.ValuteUI
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -145,17 +146,6 @@ class ConverterFragment : Fragment() {
         }
     }
 
-    private fun getBalances(): String {
-        val listValute = viewModel.stateFlow.value.itemsTopValute
-        val stringBuilder = StringBuilder()
-
-        for (valute in listValute) {
-            val balance = "%.2f".format(valute.balance)
-            stringBuilder.append("${valute.charCode} : ${balance} ${valute.symbol}\n")
-        }
-        return stringBuilder.toString()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding.rvTop.removeOnScrollListener(scrollListenerTop)
@@ -163,10 +153,17 @@ class ConverterFragment : Fragment() {
         _binding = null
     }
 
-    private fun showExchangeTransactionDialog() {
+    private fun showExchangeTransactionDialog(valutes: List<ValuteUI>) {
+
+        val stringBuilder = StringBuilder()
+        for (valute in valutes) {
+            val balance = "%.2f".format(valute.balance)
+            stringBuilder.append("${valute.charCode} : ${balance} ${valute.symbol}\n")
+        }
+
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.approve)
-            .setMessage(getBalances())
+            .setMessage(stringBuilder)
             .setPositiveButton("Ok") { dialog, _ ->
                 dialog.dismiss()
             }
@@ -193,7 +190,7 @@ class ConverterFragment : Fragment() {
                 Toast.LENGTH_LONG
             ).show()
 
-            is SideEffects.onClickExchange -> showExchangeTransactionDialog()
+            is SideEffects.OnClickExchange -> showExchangeTransactionDialog(sideEffects.listValute)
         }
     }
 
